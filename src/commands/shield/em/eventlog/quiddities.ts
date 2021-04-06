@@ -1,15 +1,15 @@
-import { flags, SfdxCommand } from "@salesforce/command";
-import EventLogLogic from "../../../../mvc/controller/eventlog";
-import { AnyJson } from "@salesforce/ts-types";
+import { AnyJson } from '@salesforce/ts-types';
+import { SfdxCommand, flags } from '@salesforce/command';
+import EventLogLogic from '../../../../mvc/controller/eventlog';
 
 /**
  * @class ListQuiddities
- * @description SFDX command line to retrieve the list of quiddities 
- *              from Shield Event Monitoring 
+ * @description SFDX command line to retrieve the list of quiddities
+ *              from Shield Event Monitoring
  */
 export default class ListQuiddities extends SfdxCommand {
 
-  /** 
+  /**
    * @property List of flags for this SFDX command line
    */
   protected static flagsConfig = {
@@ -32,22 +32,17 @@ export default class ListQuiddities extends SfdxCommand {
   protected static requiresProject = false;
 
   /**
-   * @method run Main method 
-   * @returns list of quiddities from Shield Event Monitoring 
+   * @method run Main method
+   * @returns list of quiddities from Shield Event Monitoring
    */
-  public async run(): Promise<Array<AnyJson>> {
+  public async run(): Promise<AnyJson[]> {
 
     // Get distinct quiddities from event log files
     const quiddities: Map<string, string> = EventLogLogic.GetQuiddities();
 
     // Convert map into array
-    let info: Array<AnyJson> = [];
-    quiddities.forEach(function (name, key, map) {
-      info.push({
-        key: key,
-        name: name
-      });
-    });
+    const info: AnyJson[] = [];
+    quiddities.forEach((n, k, m) => info.push({ key: k, name: n }));
 
     // Show information
     this.ux.table(info, ['key', 'name']);

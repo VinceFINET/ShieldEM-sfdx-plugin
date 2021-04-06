@@ -1,18 +1,8 @@
 /**
  * @class StatMetric
- * @description 
+ * @description
  */
 export default class StatMetric {
-
-  /**
-   * @method Constructor of the class
-   */
-  constructor() {
-    this.values = [];
-    this.sum = 0;
-    this.min = undefined;
-    this.max = undefined;
-  }
 
   /**
    * @property sum of all values
@@ -32,7 +22,17 @@ export default class StatMetric {
   /**
    * @property all values
    */
-  private values: Array<number>;
+  private values: number[];
+
+  /**
+   * @method Constructor of the class
+   */
+   constructor() {
+    this.values = [];
+    this.sum = 0;
+    this.min = undefined;
+    this.max = undefined;
+  }
 
   /**
    * @method addValue
@@ -44,7 +44,7 @@ export default class StatMetric {
     if (this.min === undefined || this.min > value) {
       this.min = value;
     }
-    if (this.max === undefined ||this.max < value) {
+    if (this.max === undefined || this.max < value) {
       this.max = value;
     }
   }
@@ -53,7 +53,7 @@ export default class StatMetric {
    * @method getValues
    * @returns all values
    */
-  public getValues(): Array<number> {
+  public getValues(): number[] {
     return this.values;
   }
 
@@ -70,7 +70,7 @@ export default class StatMetric {
    * @returns the average of all values
    */
   public getAverage(): number {
-    return this.values.length == 0 ? undefined : this.sum / this.values.length;
+    return this.values.length === 0 ? undefined : this.sum / this.values.length;
   }
 
   /**

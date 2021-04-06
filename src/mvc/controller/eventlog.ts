@@ -1,8 +1,8 @@
-import { Connection } from "@salesforce/core";
-import { AnyJson } from "@salesforce/ts-types";
-import EventLogType from "../data/eventlogtype";
-import EventLogMetadataEntry from "../data/eventlogmetadataentry";
-import EventLogDataHeader from "../data/eventlogdataheader";
+import { Connection } from '@salesforce/core';
+import { AnyJson } from '@salesforce/ts-types';
+import EventLogType from '../data/eventlogtype';
+import EventLogMetadataEntry from '../data/eventlogmetadataentry';
+import EventLogDataHeader from '../data/eventlogdataheader';
 
 /**
  * @class EventLogController
@@ -11,40 +11,40 @@ import EventLogDataHeader from "../data/eventlogdataheader";
 export default class EventLogController {
 
     /**
-     * @method GetTypes Connects to the Salesforce database and retrieves the list 
+     * @method GetTypes Connects to the Salesforce database and retrieves the list
      *                  of distinct Event Types
      * @param conn Connection to the Salesforce database
      * @returns a list of EventLogType items
      * @see EventLogType
      */
-    public static async GetTypes(conn: Connection): Promise<Array<EventLogType>> {
+    public static async GetTypes(conn: Connection): Promise<EventLogType[]> {
 
         const res = await conn.query<AnyJson>(
-            'SELECT '+EVENTTYPE_FIELDNAME+', '+INTERVAL_FIELDNAME+', '+
-            'COUNT('+ID_FIELDNAME+') '+COUNT_FIELDNAME+' ' +
-            'FROM '+EVENTLOGFILE_TABLE+' ' +
-            'WHERE '+INTERVAL_FIELDNAME+" IN ('"+INTERVAL_HOURLY_VALUE+"', '"+
-            INTERVAL_DAILY_VALUE+"') " +
-            'GROUP BY '+EVENTTYPE_FIELDNAME+', '+INTERVAL_FIELDNAME+' ' +
-            'ORDER BY '+EVENTTYPE_FIELDNAME+' ASC, '+INTERVAL_FIELDNAME+' ASC '
+            'SELECT ' + EVENTTYPE_FIELDNAME + ', ' + INTERVAL_FIELDNAME + ', ' +
+            'COUNT(' + ID_FIELDNAME + ') ' + COUNT_FIELDNAME + ' ' +
+            'FROM ' + EVENTLOGFILE_TABLE + ' ' +
+            'WHERE ' + INTERVAL_FIELDNAME + ' IN (\'' + INTERVAL_HOURLY_VALUE + '\', \'' +
+            INTERVAL_DAILY_VALUE + '\') ' +
+            'GROUP BY ' + EVENTTYPE_FIELDNAME + ', ' + INTERVAL_FIELDNAME + ' ' +
+            'ORDER BY ' + EVENTTYPE_FIELDNAME + ' ASC, ' + INTERVAL_FIELDNAME + ' ASC '
         );
 
-        let types = new Array<EventLogType>();
+        const types: EventLogType[] = [];
 
         if (res.records) {
-            let tMap = new Map<string, Array<number>>();
+            const tMap = new Map<string, number[]>();
             res.records.forEach(row => {
-                let type: string = row[EVENTTYPE_FIELDNAME];
+                const type: string = row[EVENTTYPE_FIELDNAME];
                 if (! tMap.has(type)) {
                     tMap.set(type, [ 0, 0 ]);
                 }
-                let entry: Array<number> = tMap.get(type);
+                const entry: number[] = tMap.get(type);
                 switch (row[INTERVAL_FIELDNAME]) {
                     case INTERVAL_HOURLY_VALUE: { entry[INDEX_HOURLY] += row[COUNT_FIELDNAME]; break; }
                     case INTERVAL_DAILY_VALUE:  { entry[INDEX_DAILY]  += row[COUNT_FIELDNAME]; break; }
                 }
             });
-            tMap.forEach((value: Array<number>, key: string) => {
+            tMap.forEach((value: number[], key: string) => {
                 types.push(new EventLogType(key, value[INDEX_DAILY], value[INDEX_HOURLY]));
             });
         }
@@ -57,7 +57,7 @@ export default class EventLogController {
      */
     public static GetQuiddities(): Map<string, string> {
 
-        let quidditiesMap: Map<string, string> = new Map<string, string>();
+        const quidditiesMap: Map<string, string> = new Map<string, string>();
         quidditiesMap.set('A', 'QueryLocator Batch Apex');
         quidditiesMap.set('BA', 'Batch Apex (for debugger)');
         quidditiesMap.set('C', 'Scheduled Apex');
@@ -79,9 +79,9 @@ export default class EventLogController {
         quidditiesMap.set('X', 'Execute Anonymous');
         return quidditiesMap;
     }
-   
+
     /**
-     * @method GetMetadata Connects to the Salesforce database and retrieves the list 
+     * @method GetMetadata Connects to the Salesforce database and retrieves the list
      *                     of the metadata describing the log file
      * @param conn Connection to the Salesforce database
      * @param eventType API name of the event type to consider
@@ -90,37 +90,38 @@ export default class EventLogController {
      * @returns a list of EventLogMetadataEntry items
      * @see EventLogMetadataEntry
      */
-    public static async GetMetadata(conn: Connection, eventType: string, 
-        startdate: Date, enddate: Date): Promise<Array<EventLogMetadataEntry>> {
+    public static async GetMetadata(conn: Connection, eventType: string, startdate: Date, enddate: Date): Promise<EventLogMetadataEntry[]> {
 
-        const query: string = 
-            'SELECT '+ID_FIELDNAME+', '+EVENTTYPE_FIELDNAME+', '+LOGDATE_FIELDNAME+', '+
-            LOGFILE_FIELDNAME+', '+LOGFILELEN_FIELDNAME+', ' +
-            LOGFILEFIELDNAMES_FIELDNAME+', '+LOGFILEFIELDTYPES_FIELDNAME+', '+
-            SEQUENCE_FIELDNAME+', '+INTERVAL_FIELDNAME+' ' +
-            'FROM '+EVENTLOGFILE_TABLE+' ' +
-            'WHERE '+EVENTTYPE_FIELDNAME+" = '"+eventType+"' " + 
-            'AND '+LOGDATE_FIELDNAME+' >= '+startdate.toISOString()+' ' + 
-            'AND '+LOGDATE_FIELDNAME+' < '+enddate.toISOString()+' ' + 
-            'AND '+INTERVAL_FIELDNAME+" = '"+INTERVAL_DAILY_VALUE+"' " +
-            'ORDER BY '+LOGDATE_FIELDNAME+' DESC, '+SEQUENCE_FIELDNAME+' ';
+        const query: string =
+            'SELECT ' + ID_FIELDNAME + ', ' + EVENTTYPE_FIELDNAME + ', ' + LOGDATE_FIELDNAME + ', ' +
+            LOGFILE_FIELDNAME + ', ' + LOGFILELEN_FIELDNAME + ', ' +
+            LOGFILEFIELDNAMES_FIELDNAME + ', ' + LOGFILEFIELDTYPES_FIELDNAME + ', ' +
+            SEQUENCE_FIELDNAME + ', ' + INTERVAL_FIELDNAME + ' ' +
+            'FROM ' + EVENTLOGFILE_TABLE + ' ' +
+            'WHERE ' + EVENTTYPE_FIELDNAME + ' = \'' + eventType + '\' ' +
+            'AND ' + LOGDATE_FIELDNAME + ' >= ' + startdate.toISOString() + ' ' +
+            'AND ' + LOGDATE_FIELDNAME + ' < ' + enddate.toISOString() + ' ' +
+            'AND ' + INTERVAL_FIELDNAME + ' = \'' + INTERVAL_DAILY_VALUE + '\' ' +
+            'ORDER BY ' + LOGDATE_FIELDNAME + ' DESC, ' + SEQUENCE_FIELDNAME + ' ';
 
         const res = await conn.query<AnyJson>(query);
 
-        let files = new Array();
+        const files = new Array();
 
         if (res.records) {
             res.records.forEach(row => {
 
                 // Generation of the list of headers
-                let logFileFields = new Array<EventLogDataHeader>();
+                const logFileFields: EventLogDataHeader[] = [];
                 const logFileFieldNames: string = row[LOGFILEFIELDNAMES_FIELDNAME];
                 const logFileFieldTypes: string = row[LOGFILEFIELDTYPES_FIELDNAME];
                 if (logFileFieldNames && logFileFieldTypes) {
-                    let fields: Array<string> = logFileFieldNames.split(',');
-                    let types: Array<string> = logFileFieldTypes.split(',');
-                    if (fields && types) for (let i = 0; i < fields.length; i++) {
-                        logFileFields.push(new EventLogDataHeader(fields[i], types[i]));
+                    const fields: string[] = logFileFieldNames.split(',');
+                    const types: string[] = logFileFieldTypes.split(',');
+                    if (fields && types) {
+                        for (let i = 0; i < fields.length; i++) {
+                            logFileFields.push(new EventLogDataHeader(fields[i], types[i]));
+                        }
                     }
                 }
 
@@ -129,7 +130,7 @@ export default class EventLogController {
                     new EventLogMetadataEntry(
                         row[ID_FIELDNAME], row[EVENTTYPE_FIELDNAME],
                         row[LOGDATE_FIELDNAME], row[LOGFILE_FIELDNAME],
-                        row[LOGFILELEN_FIELDNAME], logFileFields, 
+                        row[LOGFILELEN_FIELDNAME], logFileFields,
                         row[SEQUENCE_FIELDNAME], row[INTERVAL_FIELDNAME]
                     )
                 );
@@ -148,29 +149,32 @@ export default class EventLogController {
      * @returns a list of AnyJson items
      * @see GetMetadata
      */
-    public static async GetContent(conn: Connection, logFileURI: string, 
-        fieldsToKeep?: Array<string>): Promise<Array<AnyJson>> {
+    public static async GetContent(conn: Connection, logFileURI: string, fieldsToKeep?: string[]): Promise<AnyJson[]> {
 
         const logFileLines = await conn.request(logFileURI);
 
-        let lines = new Array<AnyJson>();
-        for (const k in logFileLines) if (logFileLines.hasOwnProperty(k)) {
-            const logFileLine = logFileLines[k];
-            if (fieldsToKeep) {
-                let line = {};
-                for (const l in fieldsToKeep) if (fieldsToKeep.hasOwnProperty(l)) {
-                    line[fieldsToKeep[l]] = logFileLine[fieldsToKeep[l]];
-                };
-                lines.push(line);
-            } else {
-                lines.push(logFileLine);
+        const lines = new Array<AnyJson>();
+        for (const k in logFileLines) {
+            if (logFileLines.hasOwnProperty(k)) {
+                const logFileLine = logFileLines[k];
+                if (fieldsToKeep) {
+                    const line = {};
+                    for (const l in fieldsToKeep) {
+                        if (fieldsToKeep.hasOwnProperty(l)) {
+                            line[fieldsToKeep[l]] = logFileLine[fieldsToKeep[l]];
+                        }
+                    }
+                    lines.push(line);
+                } else {
+                    lines.push(logFileLine);
+                }
             }
         }
         return lines;
     }
 
     /**
-     * @method GetAllContent Calls the method GetContent for a list of files and append it 
+     * @method GetAllContent Calls the method GetContent for a list of files and append it
      *                       to a single object.
      * @param conn Connection to the Salesforce database
      * @param files List of files to consider (as retrieved in the method GetMetadata)
@@ -179,15 +183,13 @@ export default class EventLogController {
      * @see GetMetadata
      * @see GetContent
      */
-    public static async GetAllContent(conn: Connection, files: Array<EventLogMetadataEntry>, 
-        fields?: Array<string>, quiddities?: Array<string>): Promise<Array<AnyJson>> {
+    public static async GetAllContent(conn: Connection, files: EventLogMetadataEntry[], fields?: string[], quiddities?: string[]): Promise<AnyJson[]> {
 
         let allLines = new Array<AnyJson>();
-        for (let i = 0; i < files.length; i++) {
-            const file: EventLogMetadataEntry = files[i];
-            const fileLines: Array<AnyJson> = await EventLogController.GetContent(conn, file.getLogFile(), fields);
+        for (let file of files) {
+            const fileLines: AnyJson[] = await EventLogController.GetContent(conn, file.getLogFile(), fields);
             allLines = allLines.concat(fileLines);
-        }        
+        };
         return allLines;
     }
 }
@@ -198,12 +200,12 @@ export default class EventLogController {
 const INDEX_DAILY: number = 0;
 
 /**
- * @description Index used for counting hourly in an array 
+ * @description Index used for counting hourly in an array
  */
 const INDEX_HOURLY: number = 1;
 
-/** 
- * @description Internal constant to store the name of the table that 
+/**
+ * @description Internal constant to store the name of the table that
  *              contains the event log files
  */
 const EVENTLOGFILE_TABLE: string = 'EventLogFile';
@@ -238,7 +240,7 @@ const LOGFILE_FIELDNAME: string = 'LogFile';
  */
 const LOGFILELEN_FIELDNAME: string = 'LogFileLength';
 
-/** 
+/**
  * @description Internal constant to store the list of fields name for each file
  */
 const LOGFILEFIELDNAMES_FIELDNAME: string = 'LogFileFieldNames';

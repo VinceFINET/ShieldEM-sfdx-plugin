@@ -1,4 +1,4 @@
-import TimeUtility from "./time/timeutility";
+import TimeUtility from './time/timeutility';
 
 /**
  * @constant DEFAULT_END_DATE Default end date for the command line

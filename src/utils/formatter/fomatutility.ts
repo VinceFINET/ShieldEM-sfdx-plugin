@@ -11,9 +11,9 @@ export default class FormatUtility {
    * @returns the formatted string
    */
   public static format(msg: string, ...replacements: any[]): string {
-    var args = arguments;
-    return msg.replace(/{(\d+)}/g, function(match, number) { 
-      return typeof args[number] != 'undefined'
+    const args = arguments;
+    return msg.replace(/{(\d+)}/g, (match, number) => {
+      return typeof args[number] !== 'undefined'
         ? args[number]
         : match
       ;

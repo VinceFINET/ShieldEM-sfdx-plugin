@@ -5,16 +5,6 @@
 export default class TimeUtility {
 
     /**
-     * @method GenerateDateInThePast
-     * @param time Starting date as timestamp
-     * @param days Additional days (can be positive or negative)
-     * @returns The date generated
-     */
-    private static GenerateDateInThePast(time: number, days: number): Date {
-        return new Date(time - days * 24 * 60 * 60 * 1000);
-    }
-
-    /**
      * @method GetToday
      * @returns Today's date
      */
@@ -47,5 +37,15 @@ export default class TimeUtility {
      */
     public static GetDateBeforeFromNow(days: number): Date {
         return TimeUtility.GenerateDateInThePast(Date.now(), days);
+    }
+
+    /**
+     * @method GenerateDateInThePast
+     * @param time Starting date as timestamp
+     * @param days Additional days (can be positive or negative)
+     * @returns The date generated
+     */
+     private static GenerateDateInThePast(time: number, days: number): Date {
+        return new Date(time - days * 24 * 60 * 60 * 1000);
     }
 }

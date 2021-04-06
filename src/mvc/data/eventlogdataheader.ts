@@ -5,16 +5,6 @@
 export default class EventLogDataHeader {
 
     /**
-     * @method Constructor of the class
-     * @param name Name of the header
-     * @param type Type of the header
-     */
-    constructor(name: string, type: string) {
-        this.name = name;
-        this.type = type;
-    }
-
-    /**
      * @property Name of the header
      */
     private name: string;
@@ -23,6 +13,16 @@ export default class EventLogDataHeader {
      * @property Type of the header
      */
     private type: string;
+
+    /**
+     * @method Constructor of the class
+     * @param name Name of the header
+     * @param type Type of the header
+     */
+    constructor(name: string, type: string) {
+        this.name = name;
+        this.type = type;
+    }
 
     /**
      * @method getName Getter for the name of the header

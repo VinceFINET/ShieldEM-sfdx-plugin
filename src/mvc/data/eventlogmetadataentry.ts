@@ -1,10 +1,50 @@
-import EventLogDataHeader from "./eventlogdataheader";
+import EventLogDataHeader from './eventlogdataheader';
 
 /**
  * @class EventLogMetadataEntry
  * @description This class represents the metadata of a single Log Event File.
  */
 export default class EventLogMetadataEntry {
+
+    /**
+     * @property Salesforce of the event log file
+     */
+    private id: string;
+
+    /**
+     * @property Type of the event log file
+     */
+    private eventType: string;
+
+    /**
+     * @property Reference date of the event log file (when it was generated)
+     */
+    private logDate: Date;
+
+    /**
+     * @property URI of the event log file (used to access the content of the file itself)
+     */
+    private logFile: string;
+
+    /**
+     * @property Size of the file in bytes
+     */
+    private logFileLength: number;
+
+    /**
+     * @property List of data headers
+     */
+    private logFileFields: EventLogDataHeader[];
+
+    /**
+     * @property Sequence of the event log file
+     */
+    private sequence: number;
+
+    /**
+     * @property Interval of the event log file (daily or hourly)
+     */
+    private interval: string;
 
     /**
      * @method Constructor of the class
@@ -17,9 +57,7 @@ export default class EventLogMetadataEntry {
      * @param sequence Sequence of the event log file
      * @param interval Interval of the event log file (daily or hourly)
      */
-    constructor(id: string, eventType: string, logDate: Date,
-        logFile: string, logFileLength: number, headers: Array<EventLogDataHeader>,
-        sequence: number, interval: string) {
+    constructor(id: string, eventType: string, logDate: Date, logFile: string, logFileLength: number, headers: EventLogDataHeader[], sequence: number, interval: string) {
             this.id = id;
             this.eventType = eventType;
             this.logDate = logDate;
@@ -29,46 +67,6 @@ export default class EventLogMetadataEntry {
             this.interval = interval;
             this.logFileFields = headers;
     }
-
-    /** 
-     * @property Salesforce of the event log file
-     */
-    private id: string;
-
-    /** 
-     * @property Type of the event log file
-     */
-    private eventType: string;
-
-    /** 
-     * @property Reference date of the event log file (when it was generated)
-     */
-    private logDate: Date;
-
-    /** 
-     * @property URI of the event log file (used to access the content of the file itself)
-     */
-    private logFile: string;
-
-    /** 
-     * @property Size of the file in bytes
-     */
-    private logFileLength: number;
-
-    /** 
-     * @property List of data headers
-     */
-    private logFileFields: Array<EventLogDataHeader>;
-
-    /** 
-     * @property Sequence of the event log file
-     */
-    private sequence: number;
-
-    /** 
-     * @property Interval of the event log file (daily or hourly)
-     */
-    private interval: string;
 
     /**
      * @method getId Getter for the Salesforce Id of the event log file
@@ -114,7 +112,7 @@ export default class EventLogMetadataEntry {
      * @method getLogFileFields Getter for the list of data headers
      * @returns the list of fields for this file (name and type)
      */
-    public getLogFileFields(): Array<EventLogDataHeader> {
+    public getLogFileFields(): EventLogDataHeader[] {
         return this.logFileFields;
     }
 
@@ -128,7 +126,7 @@ export default class EventLogMetadataEntry {
 
     /**
      * @method getInterval Getter for the interval of the event log file (daily or hourly)
-     * @returns the interval 
+     * @returns the interval
      */
     public getInterval(): string {
         return this.interval;
