@@ -279,7 +279,7 @@
     "@types/mkdirp" "1.0.0"
     debug "^3.1.0"
     graceful-fs "^4.2.4"
-    jsen "0.6.6"
+    jsen "0.6.7"
     jsforce "^1.10.0"
     jsonwebtoken "8.5.0"
     mkdirp "1.0.4"
@@ -2105,10 +2105,8 @@ jsbn@~0.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
 
-jsen@0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/jsen/-/jsen-0.6.6.tgz#0240c18cf11350ac021456f48a7eb13bd67e0420"
-  integrity sha1-AkDBjPETUKwCFFb0in6xO9Z+BCA=
+jsen@0.6.7:
+  version "0.6.7"
 
 jsesc@^2.5.1:
   version "2.5.2"
